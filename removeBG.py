@@ -8,14 +8,18 @@ input_path = 'IMG_1808.JPG'
 border_path = 'output/transparentBG.png'
 border_path2 = 'output/whiteBG.png'
 
-directory_path = 'C:\\Users\\alexa\\Desktop\\Tochilki'
-#output_path = 'C:\\Users\\alexa\\Desktop\\Tochilki-Output'
-output_path = 'output'
+directory_path = 'C:\\Users\\user\\Desktop\\Products\\Bottles'
 
+output_path = 'C:\\Users\\user\\Desktop\\output_folder'
 
+#dimnesions of output images
 DEST_WIDTH = 1536
 DEST_HEIGHT = 1536
+SIZE_OF_CONTENT = 1400
+
+#alpha value threshold
 TRANSPARENCY_FILTER = 95
+
 
 def crop(img):
     x, y, w, h = cv2.boundingRect(img[..., 3])
@@ -29,21 +33,11 @@ def scale(img):
     height = img.shape[0]
     width = img.shape[1] 
     orientation = max(height, width)
-    scale_factor = 1400 / orientation
+    scale_factor = SIZE_OF_CONTENT / orientation
     
     scaled_f_down = cv2.resize(img, None, fx= scale_factor, fy= scale_factor, interpolation= cv2.INTER_LINEAR)
     return scaled_f_down
     
-
-def makeBorders(img):
-    height = img.shape[0]
-    width = img.shape[1]
-    if height % 2 != 0: height -= 1
-    if width % 2 != 0: width -= 1
-    top = int((DEST_HEIGHT - height) / 2)
-    left = int((DEST_WIDTH - width) / 2)
-    result = cv2.copyMakeBorder(img, top, top, left, left, cv2.BORDER_REPLICATE)
-    return result
 
 
 def pasteOnCanvas(img):
@@ -67,12 +61,14 @@ def whiteBackground(img):
 def process_image(img_path, white_bg_path, clear_bg_path):
     target_folder_t = '/'.join(clear_bg_path.split("\\")[:-1])
     target_folder_w = '/'.join(white_bg_path.split("\\")[:-1])
+    
     original = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
     im = remove(original, alpha_matting=False)
     
     cropped = crop(im)
     scaled = scale(cropped)
     clear_bg = pasteOnCanvas(scaled)
+    #creates the directory through the os library
     if(not os.path.exists(target_folder_t)):
         os.makedirs(target_folder_t)
     cv2.imwrite(clear_bg_path, clear_bg)
@@ -80,7 +76,7 @@ def process_image(img_path, white_bg_path, clear_bg_path):
     if(not os.path.exists(target_folder_w)):
         os.makedirs(target_folder_w)
     cv2.imwrite(white_bg_path, white_bg)
-    #print("Image processed:", clear_bg_path)
+    
 
 
 
