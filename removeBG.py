@@ -3,11 +3,6 @@ from rembg import remove
 import cv2
 import os
 
-input_path = 'IMG_1808.JPG'
-
-border_path = 'output/transparentBG.png'
-border_path2 = 'output/whiteBG.png'
-
 directory_path = 'C:\\Users\\user\\Desktop\\Products\\Bottles'
 
 output_path = 'C:\\Users\\user\\Desktop\\output_folder'
@@ -15,7 +10,7 @@ output_path = 'C:\\Users\\user\\Desktop\\output_folder'
 #dimnesions of output images
 DEST_WIDTH = 1536
 DEST_HEIGHT = 1536
-SIZE_OF_CONTENT = 1400
+SIZE_OF_PRODUCT = 1400
 
 #alpha value threshold
 TRANSPARENCY_FILTER = 95
@@ -33,7 +28,7 @@ def scale(img):
     height = img.shape[0]
     width = img.shape[1] 
     orientation = max(height, width)
-    scale_factor = SIZE_OF_CONTENT / orientation
+    scale_factor = SIZE_OF_PRODUCT / orientation
     
     scaled_f_down = cv2.resize(img, None, fx= scale_factor, fy= scale_factor, interpolation= cv2.INTER_LINEAR)
     return scaled_f_down
@@ -90,11 +85,3 @@ for subdir, dirs, files in os.walk(directory_path):
         
         
         process_image(img_path, white_path, clear_path)
-        
-        #print(img_path)
-        
-        
-
-
-
-#img.save(output_path)
